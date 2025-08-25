@@ -1,0 +1,711 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Store Management System - Philippine Peso (₱)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 🔐 AUTHENTICATION CONTAINER -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>🏪 Store Management System</h1>
+                <p>Professional inventory and sales management solution</p>
+            </div>
+
+            <!-- NAVIGATION TABS -->
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" onclick="switchAuthTab('login')">Sign In</button>
+                <button class="auth-tab-btn" onclick="switchAuthTab('pricing')">Get Access</button>
+                <button class="auth-tab-btn" onclick="switchAuthTab('reset')">Reset Password</button>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div id="login-form" class="auth-form active">
+                <h2>Sign In</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Sign In</button>
+                </form>
+                <div class="auth-note">
+                    <p>Don't have an account? Click "Get Access" tab above to purchase system access for only ₱1,499</p>
+                </div>
+            </div>
+
+            <!-- PRICING/ACCESS FORM -->
+            <div id="pricing-form" class="auth-form" style="display: none;">
+                <h2>🏪 Get System Access</h2>
+                <div class="pricing-content">
+                    <div class="pricing-highlight">
+                        <h3>Professional Store Management System</h3>
+                        <div class="price-tag">Only ₱1,499</div>
+                        <p>Complete business solution for your store</p>
+                    </div>
+                    
+                    <div class="features-list">
+                        <h4>✨ What's Included:</h4>
+                        <ul>
+                            <li>✅ Product Inventory Management</li>
+                            <li>✅ Sales Processing & Tracking</li>
+                            <li>✅ Business Analytics & Reports</li>
+                            <li>✅ Automated Restocking Alerts</li>
+                            <li>✅ Monthly Progress Tracking</li>
+                            <li>✅ Cloud Data Backup</li>
+                            <li>✅ Mobile-Friendly Interface</li>
+                            <li>✅ Lifetime Updates</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="contact-info">
+                        <h4>📞 Get Started Today!</h4>
+                        <p>Contact the system creator to get your account:</p>
+                        <div class="contact-details">
+                            <p><strong>Email:</strong> <a href="mailto:aaron.hernandez.dev@gmail.com">aaron.hernandez.dev@gmail.com</a></p>
+                            <p><strong>GitHub:</strong> <a href="https://github.com/AaronChristianHernandez" target="_blank">@AaronChristianHernandez</a></p>
+                            <p><strong>System Demo:</strong> <a href="#" onclick="showDemoInfo()">Request Live Demo</a></p>
+                        </div>
+                        <div class="payment-info">
+                            <p><strong>💳 Payment Options:</strong> GCash, PayPal, Bank Transfer</p>
+                            <p><strong>⚡ Quick Setup:</strong> Account ready within 24 hours!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth-note">
+                    <p>Already have an account? Click "Sign In" tab above to login</p>
+                </div>
+            </div>
+
+            <!-- PASSWORD RESET FORM -->
+            <div id="reset-form" class="auth-form" style="display: none;">
+                <h2>Reset Password</h2>
+                <form onsubmit="handlePasswordReset(event)">
+                    <div class="form-group">
+                        <label for="reset-email">Email Address</label>
+                        <input type="email" id="reset-email" required>
+                        <small>We'll send you a password reset link</small>
+                    </div>
+                    <button type="submit" class="auth-btn primary">Send Reset Link</button>
+                </form>
+                <div class="auth-note">
+                    <p>Remember your password? Click "Sign In" tab above to login</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📱 MAIN APPLICATION -->
+    <div id="main-app" class="main-app" style="display: none;">
+        <div id="user-info" class="user-info"></div>
+        
+    <div class="container">
+        <header>
+            <h1>Mini Store Management System</h1>
+            <p style="color: #7f8c8d; font-size: 1.1em; margin-top: 5px;">All prices in Philippine Peso (₱)</p>
+        </header>
+        
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="products">Products</button>
+            <button class="tab-button" data-tab="sales">Sales</button>
+            <button class="tab-button" data-tab="restocking">Restocking</button>
+            <button class="tab-button" data-tab="inventory">Inventory Overview</button>
+            <button class="tab-button" data-tab="summary">Summary</button>
+            <button class="tab-button" data-tab="monthly">Monthly Progress</button>
+            <button class="tab-button" data-tab="automation">Automation Hub</button>
+        </nav>
+
+        <!-- Products Tab -->
+        <div id="products" class="tab-content active">
+            <div class="tab-header">
+                <h2>Product Management</h2>
+                <button class="refresh-btn" onclick="refreshProductsTab()" title="Refresh Products">🔄 Refresh</button>
+            </div>
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="product-name">Product Name:</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Category:</label>
+                    <select id="product-category" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="food">Food & Beverages</option>
+                        <option value="household">Household Items</option>
+                        <option value="personal">Personal Care</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-barcode">Barcode/SKU (Optional):</label>
+                    <input type="text" id="product-barcode" placeholder="e.g., 1234567890123">
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="original-price">Original Price (₱):</label>
+                    <input type="number" id="original-price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="selling-price">Selling Price (₱):</label>
+                    <input type="number" id="selling-price" step="0.01" min="0" required>
+                </div>
+                <button type="submit">Add Product</button>
+            </form>
+            
+            <div class="product-list">
+                <h3>Product Inventory</h3>
+                
+                <!-- Enhanced Search and Filter Controls -->
+                <div class="product-controls">
+                    <div class="search-section">
+                        <input type="text" id="product-search" placeholder="🔍 Search products by name..." style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 300px;">
+                        <select id="product-category-filter" style="padding: 8px; margin-left: 10px;">
+                            <option value="all">All Categories</option>
+                            <option value="food">Food & Beverages</option>
+                            <option value="household">Household Items</option>
+                            <option value="personal">Personal Care</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <select id="product-stock-filter" style="padding: 8px; margin-left: 10px;">
+                            <option value="all">All Stock Levels</option>
+                            <option value="in-stock">In Stock</option>
+                            <option value="low-stock">Low Stock</option>
+                            <option value="out-of-stock">Out of Stock</option>
+                        </select>
+                        <button onclick="clearProductFilters()" style="padding: 8px 12px; margin-left: 10px;">Clear Filters</button>
+                    </div>
+                </div>
+                
+                <table id="products-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Original Price</th>
+                            <th>Selling Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Restocking Tab -->
+        <div id="restocking" class="tab-content">
+            <div class="tab-header">
+                <h2>Restocking & Price Management</h2>
+                <button class="refresh-btn" onclick="refreshRestockingTab()" title="Refresh Restocking">🔄 Refresh</button>
+                <button class="refresh-btn" onclick="testRestockingDebug()" title="Debug Restocking" style="background: #ff6b6b;">🐛 Debug</button>
+            </div>
+            
+            <!-- Restocking Form -->
+            <div class="restocking-section">
+                <h3>🔄 Restock Products</h3>
+                <form id="restock-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="restock-product-select">Select Product:</label>
+                            <select id="restock-product-select" required>
+                                <option value="">-- Select Product to Restock --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="restock-quantity">Additional Quantity:</label>
+                            <input type="number" id="restock-quantity" min="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="current-product-info" id="current-product-info" style="display: none;">
+                        <div class="info-card">
+                            <h4>Current Product Details</h4>
+                            <p><strong>Current Stock:</strong> <span id="current-stock">0</span></p>
+                            <p><strong>Current Selling Price:</strong> ₱<span id="current-selling-price">0.00</span></p>
+                            <p><strong>Original Price:</strong> ₱<span id="current-original-price">0.00</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-original-price">New Original Price (Optional):</label>
+                            <input type="number" id="new-original-price" step="0.01" min="0">
+                            <small>Leave empty to keep current original price</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-selling-price">New Selling Price (Optional):</label>
+                            <input type="number" id="new-selling-price" step="0.01" min="0">
+                            <small>Leave empty to keep current selling price</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="restock-notes">Restock Notes (Optional):</label>
+                        <textarea id="restock-notes" placeholder="e.g., Supplier: ABC Company, Batch: 2025-001"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="restock-button">Restock Product</button>
+                </form>
+            </div>
+            
+            <!-- Bulk Restocking -->
+            <div class="restocking-section">
+                <h3>📦 Bulk Restocking</h3>
+                <div class="bulk-restock-controls">
+                    <button id="bulk-restock-low-stock" class="action-button">Restock All Low Stock Items</button>
+                </div>
+            </div>
+            
+            <!-- Price History -->
+            <div class="restocking-section">
+                <h3>💰 Price History & Analysis</h3>
+                <div class="price-history-controls">
+                    <label for="price-history-product">Select Product for Price History:</label>
+                    <select id="price-history-product">
+                        <option value="">-- Select Product --</option>
+                    </select>
+                </div>
+                
+                <div id="price-history-content" style="display: none;">
+                    <!-- Price Chart -->
+                    <div class="price-chart-container">
+                        <h4>Price Trend Chart</h4>
+                        <div id="price-chart" class="chart-container">
+                            <canvas id="price-chart-canvas"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Price History Table -->
+                    <div class="price-history-table">
+                        <h4>Price Change History</h4>
+                        <table id="price-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Original Price</th>
+                                    <th>Selling Price</th>
+                                    <th>Margin %</th>
+                                    <th>Change Reason</th>
+                                    <th>Stock at Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Restocking History -->
+            <div class="restocking-section">
+                <h3>📋 Restocking History</h3>
+                <table id="restock-history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Product</th>
+                            <th>Quantity Added</th>
+                            <th>Price Changes</th>
+                            <th>Notes</th>
+                            <th>Total Stock After</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sales Tab -->
+        <div id="sales" class="tab-content">
+            <div class="tab-header">
+                <h2>Sales Management</h2>
+                <button class="refresh-btn" onclick="refreshSalesTab()" title="Refresh Sales">🔄 Refresh</button>
+            </div>
+            <form id="sales-form">
+                <div class="form-group">
+                    <label for="product-select">Select Product:</label>
+                    <select id="product-select" required>
+                        <option value="">-- Select a Product --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sale-quantity">Quantity to Sell:</label>
+                    <input type="number" id="sale-quantity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="total-price">Total Price (₱):</label>
+                    <input type="text" id="total-price" readonly>
+                </div>
+                <button type="submit">Record Sale</button>
+            </form>
+            
+            <div class="sales-list">
+                <h3>Sales History</h3>
+                <table id="sales-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Product</th>
+                            <th>Quantity Sold</th>
+                            <th>Unit Price</th>
+                            <th>Total Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Inventory Overview Tab -->
+        <div id="inventory" class="tab-content">
+            <div class="tab-header">
+                <h2>📦 Inventory Overview</h2>
+                <button class="refresh-btn" onclick="refreshInventoryTab()" title="Refresh Inventory">🔄 Refresh</button>
+            </div>
+            
+            <!-- Inventory Statistics -->
+            <div class="inventory-stats">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h3>Total Products</h3>
+                        <p class="stat-value" id="total-products-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Inventory Value</h3>
+                        <p class="stat-value" id="total-inventory-value">₱0.00</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Low Stock Items</h3>
+                        <p class="stat-value" id="low-stock-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Out of Stock</h3>
+                        <p class="stat-value" id="out-of-stock-count">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Inventory Filters -->
+            <div class="inventory-filters">
+                <div class="filter-group">
+                    <label for="stock-filter">Filter by Stock Status:</label>
+                    <select id="stock-filter">
+                        <option value="all">All Products</option>
+                        <option value="in-stock">In Stock</option>
+                        <option value="low-stock">Low Stock</option>
+                        <option value="out-of-stock">Out of Stock</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sort-by">Sort by:</label>
+                    <select id="sort-by">
+                        <option value="name">Product Name</option>
+                        <option value="stock-asc">Stock (Low to High)</option>
+                        <option value="stock-desc">Stock (High to Low)</option>
+                        <option value="value-desc">Value (High to Low)</option>
+                        <option value="margin-desc">Margin (High to Low)</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <input type="text" id="search-products" placeholder="Search products...">
+                </div>
+                <button id="refresh-inventory" class="action-button">Refresh</button>
+            </div>
+            
+            <!-- Detailed Inventory Table -->
+            <div class="detailed-inventory">
+                <h3>Product Details</h3>
+                <table id="detailed-inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Current Stock</th>
+                            <th>Original Price</th>
+                            <th>Selling Price</th>
+                            <th>Profit Margin</th>
+                            <th>Total Value</th>
+                            <th>Total Sold</th>
+                            <th>Revenue Generated</th>
+                            <th>Stock Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Product Performance Chart -->
+            <div class="product-performance">
+                <h3>Product Performance Overview</h3>
+                <div id="performance-chart" class="chart-container">
+                    <canvas id="performance-chart-canvas"></canvas>
+                </div>
+            </div>
+            
+            <!-- Stock Alerts -->
+            <div class="stock-alerts">
+                <h3>⚠️ Stock Alerts</h3>
+                <div class="alerts-container">
+                    <div class="alert-section">
+                        <h4>Critical Stock (≤2 items)</h4>
+                        <ul id="critical-stock-list">
+                            <li>No critical stock items</li>
+                        </ul>
+                    </div>
+                    <div class="alert-section">
+                        <h4>Low Stock Warnings</h4>
+                        <ul id="warning-stock-list">
+                            <li>No low stock warnings</li>
+                        </ul>
+                    </div>
+                    <div class="alert-section">
+                        <h4>Out of Stock</h4>
+                        <ul id="out-of-stock-list">
+                            <li>No out of stock items</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <div class="action-buttons">
+                    <button id="restock-all-low" class="action-button">Restock All Low Stock</button>
+                    <button id="export-inventory" class="action-button">Export Inventory</button>
+                    <button id="print-inventory" class="action-button">Print Inventory</button>
+                    <button id="archive-products" class="action-button">Archive Old Products</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Tab -->
+        <div id="summary" class="tab-content">
+            <div class="tab-header">
+                <h2>Business Summary</h2>
+                <button class="refresh-btn" onclick="refreshSummaryTab()" title="Refresh Summary">🔄 Refresh</button>
+            </div>
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>Total Revenue</h3>
+                    <p class="summary-value" id="total-revenue">₱0.00</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Profit</h3>
+                    <p class="summary-value" id="total-profit">₱0.00</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Products in Stock</h3>
+                    <p class="summary-value" id="products-in-stock">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Sales</h3>
+                    <p class="summary-value" id="total-sales">0</p>
+                </div>
+            </div>
+            
+            <div class="low-stock-alert">
+                <h3>Low Stock Alert</h3>
+                <ul id="low-stock-list">
+                    <li>No products with low stock</li>
+                </ul>
+            </div>
+            
+            <div class="top-products">
+                <h3>Top Selling Products</h3>
+                <table id="top-products-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Total Sold</th>
+                            <th>Revenue Generated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Monthly Progress Tab -->
+        <div id="monthly" class="tab-content">
+            <div class="tab-header">
+                <h2>Monthly Progress Tracking</h2>
+                <button class="refresh-btn" onclick="refreshMonthlyTab()" title="Refresh Monthly Progress">🔄 Refresh</button>
+            </div>
+            
+            <div class="month-selector">
+                <label for="month-year-select">Select Month:</label>
+                <select id="month-year-select">
+                    <option value="">-- Select Month --</option>
+                </select>
+                <button id="generate-report">Generate Report</button>
+            </div>
+            
+            <div class="monthly-summary">
+                <div class="monthly-cards">
+                    <div class="summary-card">
+                        <h3>Monthly Revenue</h3>
+                        <p class="summary-value" id="monthly-revenue">₱0.00</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Monthly Profit</h3>
+                        <p class="summary-value" id="monthly-profit">₱0.00</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Items Sold</h3>
+                        <p class="summary-value" id="monthly-items-sold">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Transactions</h3>
+                        <p class="summary-value" id="monthly-transactions">0</p>
+                    </div>
+                </div>
+                
+                <div class="monthly-chart">
+                    <h3>Daily Sales Chart</h3>
+                    <div id="daily-sales-chart" class="chart-container">
+                        <p>Select a month to view daily sales data</p>
+                    </div>
+                </div>
+                
+                <div class="monthly-top-products">
+                    <h3>Top Products This Month</h3>
+                    <table id="monthly-top-products-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity Sold</th>
+                                <th>Revenue</th>
+                                <th>Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="month-comparison">
+                    <h3>Month-over-Month Growth</h3>
+                    <div class="growth-metrics">
+                        <div class="growth-item">
+                            <span class="metric-label">Revenue Growth:</span>
+                            <span class="metric-value" id="revenue-growth">--</span>
+                        </div>
+                        <div class="growth-item">
+                            <span class="metric-label">Profit Growth:</span>
+                            <span class="metric-value" id="profit-growth">--</span>
+                        </div>
+                        <div class="growth-item">
+                            <span class="metric-label">Sales Volume Growth:</span>
+                            <span class="metric-value" id="volume-growth">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Automation Hub Tab -->
+        <div id="automation" class="tab-content">
+            <div class="tab-header">
+                <h2>Automation Hub</h2>
+                <button class="refresh-btn" onclick="refreshAutomationTab()" title="Refresh Automation Hub">🔄 Refresh</button>
+            </div>
+            
+            <div class="automation-section">
+                <h3>🔔 Smart Alerts</h3>
+                <div class="alert-settings">
+                    <div class="setting-item">
+                        <label for="low-stock-threshold">Low Stock Alert Threshold:</label>
+                        <input type="number" id="low-stock-threshold" value="5" min="1">
+                        <span class="setting-description">Alert when stock falls below this number</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="reorder-suggestions">Enable Auto Reorder Suggestions:</label>
+                        <input type="checkbox" id="reorder-suggestions" checked>
+                        <span class="setting-description">Suggest reorder quantities based on sales velocity</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="automation-section">
+                <h3>📊 Auto Reports</h3>
+                <div class="report-automation">
+                    <button id="export-monthly-report" class="action-button">Export Monthly Report</button>
+                    <button id="export-inventory-report" class="action-button">Export Inventory Report</button>
+                    <button id="backup-data" class="action-button" onclick="exportAllData()">Backup All Data</button>
+                </div>
+            </div>
+            
+            <div class="automation-section">
+                <h3>🎯 Reorder Suggestions</h3>
+                <div id="reorder-suggestions-list" class="suggestions-container">
+                    <p>Enable auto reorder suggestions to see recommendations</p>
+                </div>
+            </div>
+            
+            <div class="automation-section">
+                <h3>💰 Profit Optimization</h3>
+                <div id="profit-optimization" class="optimization-container">
+                    <p>Analyzing sales data for profit optimization suggestions...</p>
+                </div>
+            </div>
+            
+            <div class="automation-section">
+                <h3>📈 Performance Insights</h3>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <h4>Best Selling Day</h4>
+                        <p id="best-selling-day">--</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>Average Daily Revenue</h4>
+                        <p id="avg-daily-revenue">₱0.00</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>Most Profitable Product</h4>
+                        <p id="most-profitable-product">--</p>
+                    </div>
+                    <div class="insight-card">
+                        <h4>Inventory Turnover</h4>
+                        <p id="inventory-turnover">--</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div> <!-- End main-app -->
+
+    <!-- 💫 LOADING OVERLAY -->
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- 📨 MESSAGE CONTAINER -->
+    <div id="message-container" class="message-container"></div>
+
+    <script type="module" src="auth.js?v=2.1"></script>
+    <script src="script.js?v=2.1"></script>
+    <script src="debug-restocking.js?v=2.1"></script>
+</body>
+</html>

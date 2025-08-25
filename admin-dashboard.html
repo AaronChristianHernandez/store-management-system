@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Store Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <!-- 🔐 ADMIN AUTHENTICATION -->
+    <div id="admin-auth-container" class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>🔒 Admin Access</h1>
+                <p>Administrative Portal</p>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div id="login-form" class="auth-form">
+                <h2>Admin Login</h2>
+                <form onsubmit="handleAdminLogin(event)">
+                    <div class="form-group">
+                        <label for="admin-email">Admin Email</label>
+                        <input type="email" id="admin-email" required value="admin@store.com" placeholder="admin@store.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">Admin Password</label>
+                        <input type="password" id="admin-password" required placeholder="Enter admin password">
+                    </div>
+                    <button type="submit" class="auth-btn primary">Access Dashboard</button>
+                </form>
+                
+                <div class="create-admin-section">
+                    <hr style="margin: 2rem 0; border: none; border-top: 1px solid #ddd;">
+                    <h3>🔧 First Time Setup</h3>
+                    <p>Need to create an admin account? Click below to create one.</p>
+                    <button onclick="console.log('Button clicked!'); showCreateAdminForm(); return false;" class="auth-btn secondary" type="button">
+                        🔑 Create Admin Account
+                    </button>
+                </div>
+            </div>
+
+            <!-- CREATE ADMIN FORM (Hidden by default) -->
+            <div id="create-admin-form" class="auth-form" style="display: none;">
+                <h2>Create Admin Account</h2>
+                <form onsubmit="handleCreateAdmin(event)">
+                    <div class="form-group">
+                        <label for="new-admin-email">Admin Email</label>
+                        <input type="email" id="new-admin-email" required value="admin@store.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-admin-password">Admin Password</label>
+                        <input type="password" id="new-admin-password" required placeholder="Choose a secure password">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-admin-name">Admin Name</label>
+                        <input type="text" id="new-admin-name" required value="System Administrator">
+                    </div>
+                    <button type="submit" class="auth-btn primary">🚀 Create Admin Account</button>
+                    <button type="button" onclick="showLoginForm()" class="auth-btn secondary">← Back to Login</button>
+                </form>
+                <div class="auth-note">
+                    <p>⚠️ This will create a permanent admin account. Use a strong password!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📊 ADMIN DASHBOARD -->
+    <div id="admin-dashboard" class="admin-dashboard" style="display: none;">
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <h1>🔧 Admin Dashboard</h1>
+                <div class="admin-user-info">
+                    <span id="admin-user-name">Administrator</span>
+                    <button onclick="adminLogout()" class="logout-btn">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- NAVIGATION -->
+        <nav class="admin-nav">
+            <button class="admin-tab-btn active" data-tab="overview">📈 Overview</button>
+            <button class="admin-tab-btn" data-tab="users">👥 Users</button>
+            <button class="admin-tab-btn" data-tab="stores">🏪 Stores</button>
+            <button class="admin-tab-btn" data-tab="analytics">📊 Analytics</button>
+            <button class="admin-tab-btn" data-tab="system">⚙️ System</button>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+            
+            <!-- OVERVIEW TAB -->
+            <div id="overview-tab" class="admin-tab-content active">
+                <h2>System Overview</h2>
+                
+                <!-- STATS CARDS -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <h3 id="total-users">0</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🏪</div>
+                        <div class="stat-info">
+                            <h3 id="active-stores">0</h3>
+                            <p>Active Stores</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <h3 id="total-revenue">₱0</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <h3 id="total-products">0</h3>
+                            <p>Total Products</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECENT ACTIVITY -->
+                <div class="activity-section">
+                    <h3>Recent Activity</h3>
+                    <div id="recent-activity" class="activity-list">
+                        <!-- Activity items will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS TAB -->
+            <div id="users-tab" class="admin-tab-content">
+                <div class="tab-header">
+                    <h2>User Management</h2>
+                    <div class="tab-actions">
+                        <input type="text" id="user-search" placeholder="Search users..." class="search-input">
+                        <button onclick="refreshUsers()" class="refresh-btn">🔄 Refresh</button>
+                    </div>
+                </div>
+
+                <div class="users-table-container">
+                    <table class="admin-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Joined</th>
+                                <th>Status</th>
+                                <th>Store Stats</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- STORES TAB -->
+            <div id="stores-tab" class="admin-tab-content">
+                <div class="tab-header">
+                    <h2>Store Analytics</h2>
+                    <div class="tab-actions">
+                        <select id="store-filter" class="filter-select">
+                            <option value="">All Stores</option>
+                            <option value="active">Active Stores</option>
+                            <option value="inactive">Inactive Stores</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stores-grid" id="stores-grid">
+                    <!-- Store cards will be loaded here -->
+                </div>
+            </div>
+
+            <!-- ANALYTICS TAB -->
+            <div id="analytics-tab" class="admin-tab-content">
+                <h2>System Analytics</h2>
+                
+                <div class="analytics-controls">
+                    <select id="analytics-period" class="period-select">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="90">Last 90 Days</option>
+                        <option value="365">Last Year</option>
+                    </select>
+                    <button onclick="generateReport()" class="generate-btn">📊 Generate Report</button>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>User Growth</h3>
+                        <canvas id="user-growth-chart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3>Revenue Trends</h3>
+                        <canvas id="revenue-chart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SYSTEM TAB -->
+            <div id="system-tab" class="admin-tab-content">
+                <h2>System Management</h2>
+                
+                <div class="system-sections">
+                    <div class="system-section">
+                        <h3>🛠️ System Maintenance</h3>
+                        <div class="system-actions">
+                            <button onclick="clearInactiveUsers()" class="danger-btn">Clear Inactive Users</button>
+                            <button onclick="optimizeDatabase()" class="primary-btn">Optimize Database</button>
+                            <button onclick="generateBackup()" class="secondary-btn">Create Backup</button>
+                        </div>
+                    </div>
+
+                    <div class="system-section">
+                        <h3>📧 System Notifications</h3>
+                        <div class="notification-controls">
+                            <textarea id="broadcast-message" placeholder="Enter broadcast message..." rows="4"></textarea>
+                            <button onclick="sendBroadcast()" class="broadcast-btn">📢 Send to All Users</button>
+                        </div>
+                    </div>
+
+                    <div class="system-section">
+                        <h3>⚙️ System Configuration</h3>
+                        <div class="config-grid">
+                            <div class="config-item">
+                                <label>Maximum Products per Store</label>
+                                <input type="number" id="max-products" value="1000">
+                            </div>
+                            <div class="config-item">
+                                <label>User Session Timeout (minutes)</label>
+                                <input type="number" id="session-timeout" value="30">
+                            </div>
+                            <div class="config-item">
+                                <label>Enable New Registrations</label>
+                                <select id="enable-registrations">
+                                    <option value="true">Enabled</option>
+                                    <option value="false">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button onclick="saveSystemConfig()" class="save-btn">💾 Save Configuration</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>User Details</h3>
+                <span class="close" onclick="closeUserModal()">&times;</span>
+            </div>
+            <div id="user-modal-body" class="modal-body">
+                <!-- User details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="admin-dashboard.js"></script>
+</body>
+</html>

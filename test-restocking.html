@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quick Restocking Test</title>
+</head>
+<body>
+    <h1>Restocking Test</h1>
+    
+    <h2>Step 1: Check localStorage</h2>
+    <button onclick="checkLocalStorage()">Check localStorage Data</button>
+    
+    <h2>Step 2: Add Test Product</h2>
+    <button onclick="addTestProduct()">Add Test Product</button>
+    
+    <h2>Step 3: Test Dropdown</h2>
+    <select id="test-dropdown">
+        <option value="">-- Select Product --</option>
+    </select>
+    <button onclick="populateTestDropdown()">Populate Dropdown</button>
+    
+    <h2>Console Output:</h2>
+    <div id="output" style="background: #f0f0f0; padding: 10px; height: 300px; overflow-y: scroll;"></div>
+    
+    <script>
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        let output = document.getElementById('output');
+        
+        function log(message) {
+            console.log(message);
+            output.innerHTML += message + '<br>';
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function checkLocalStorage() {
+            log('=== CHECKING LOCALSTORAGE ===');
+            log('Products in localStorage: ' + (localStorage.getItem('products') || 'null'));
+            log('Parsed products: ' + JSON.stringify(products));
+            log('Products length: ' + products.length);
+            log('Sales in localStorage: ' + (localStorage.getItem('sales') || 'null'));
+            log('=== END CHECK ===');
+        }
+        
+        function addTestProduct() {
+            log('Adding test product...');
+            const testProduct = {
+                id: Date.now(),
+                name: 'Test Product',
+                category: 'Test',
+                quantity: 10,
+                originalPrice: 5.00,
+                sellingPrice: 8.00
+            };
+            
+            products.push(testProduct);
+            localStorage.setItem('products', JSON.stringify(products));
+            log('Test product added: ' + JSON.stringify(testProduct));
+            log('New products array length: ' + products.length);
+        }
+        
+        function populateTestDropdown() {
+            log('Populating test dropdown...');
+            const dropdown = document.getElementById('test-dropdown');
+            dropdown.innerHTML = '<option value="">-- Select Product --</option>';
+            
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = product.name + ' (Stock: ' + product.quantity + ')';
+                dropdown.appendChild(option);
+                log('Added option: ' + option.textContent);
+            });
+            
+            log('Dropdown populated with ' + products.length + ' products');
+            log('Total options in dropdown: ' + dropdown.options.length);
+        }
+        
+        // Auto-check on load
+        window.onload = function() {
+            log('Page loaded. Running initial check...');
+            checkLocalStorage();
+        };
+    </script>
+</body>
+</html>
