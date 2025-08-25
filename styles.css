@@ -18,6 +18,33 @@ body {
     overflow-x: hidden;
 }
 
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #2563eb rgba(30, 41, 59, 0.1);
+}
+
 :root {
     /* Professional Color Palette */
     --primary-color: #2563eb;
@@ -937,8 +964,7 @@ ul li:last-child {
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     padding: var(--spacing-lg) var(--spacing-md);
 }
 
@@ -954,6 +980,26 @@ ul li:last-child {
         radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
     pointer-events: none;
+    animation: floatingBackground 20s ease-in-out infinite;
+}
+
+@keyframes floatingBackground {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    25% {
+        transform: translateY(-10px) scale(1.02);
+        opacity: 0.9;
+    }
+    50% {
+        transform: translateY(0) scale(1.01);
+        opacity: 1;
+    }
+    75% {
+        transform: translateY(10px) scale(1.02);
+        opacity: 0.9;
+    }
 }
 
 .auth-box {
@@ -966,14 +1012,48 @@ ul li:last-child {
         inset 0 1px 0 rgba(255, 255, 255, 0.6);
     width: 100%;
     max-width: 520px;
-    padding: var(--spacing-2xl);
-    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    overflow: hidden;
-    margin: auto;
     max-height: 90vh;
+    padding: var(--spacing-2xl);
+    animation: slideUpWithScale 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
     overflow-y: auto;
+    overflow-x: hidden;
+    margin: auto;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.auth-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 35px 80px -12px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.auth-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.auth-box::-webkit-scrollbar-track {
+    background: rgba(248, 250, 252, 0.5);
+    border-radius: 4px;
+    margin: var(--spacing-md) 0;
+}
+
+.auth-box::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.6), rgba(59, 130, 246, 0.6));
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-box::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
 }
 
 .auth-box::before {
@@ -985,13 +1065,26 @@ ul li:last-child {
     height: 4px;
     background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--success-color));
     border-radius: 24px 24px 0 0;
+    animation: progressBarGlow 3s ease-in-out infinite;
+}
+
+@keyframes progressBarGlow {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
+        opacity: 1;
+    }
+    50% {
+        box-shadow: 0 0 16px rgba(37, 99, 235, 0.8), 0 0 24px rgba(16, 185, 129, 0.4);
+        opacity: 0.9;
+    }
 }
 
 @media (min-width: 1024px) {
     .auth-box {
         max-width: 600px;
-        padding: 3rem;
         max-height: 85vh;
+        padding: 3rem;
+        overflow-y: auto;
     }
     
     .pricing-highlight {
@@ -1016,33 +1109,60 @@ ul li:last-child {
     }
     
     .contact-info {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: var(--spacing-xl);
-        align-items: start;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: var(--spacing-md);
+        padding: var(--spacing-xl);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: var(--border-radius);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .contact-info h4 {
-        grid-column: 1 / -1;
         text-align: center;
         margin-bottom: var(--spacing-lg);
+        justify-content: center;
+        width: 100%;
     }
     
-    .contact-details {
-        grid-column: 1;
+    .contact-info > p,
+    .contact-info p {
+        text-align: center;
+        margin-bottom: var(--spacing-sm);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     
     .payment-info {
-        grid-column: 2;
-        margin-top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: var(--spacing-lg) 0;
+        padding: var(--spacing-lg);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: var(--border-radius);
+        border-left: 3px solid var(--primary-color);
+    }
+    
+    .payment-info p {
+        text-align: center;
+        margin-bottom: var(--spacing-sm);
+        width: 100%;
     }
 }
 
 @media (min-width: 1440px) {
     .auth-box {
         max-width: 680px;
-        padding: 3.5rem;
         max-height: 80vh;
+        padding: 3.5rem;
+        overflow-y: auto;
     }
     
     .pricing-highlight {
@@ -1072,7 +1192,27 @@ ul li:last-child {
 @media (min-width: 1920px) {
     .auth-box {
         max-width: 750px;
+        max-height: 85vh;
         padding: 4rem;
+        overflow-y: auto;
+    }
+}
+
+@keyframes slideUpWithScale {
+    0% {
+        opacity: 0;
+        transform: translateY(60px) scale(0.9);
+        filter: blur(20px);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateY(20px) scale(0.95);
+        filter: blur(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
     }
 }
 
@@ -1086,6 +1226,40 @@ ul li:last-child {
         opacity: 1;
         transform: translateY(0) scale(1);
         filter: blur(0);
+    }
+}
+
+/* Scroll reveal animation for form elements */
+@keyframes scrollFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInWithScroll {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -1141,33 +1315,26 @@ ul li:last-child {
 /* Authentication Forms */
 .auth-form {
     display: none;
-    animation: fadeIn 0.3s ease-in-out;
-    max-height: calc(70vh - 200px);
-    overflow-y: auto;
-    padding-right: var(--spacing-xs);
+    animation: fadeInWithScroll 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: visible;
+    text-align: center;
 }
 
 .auth-form.active {
     display: block;
 }
 
-.auth-form::-webkit-scrollbar {
-    width: 6px;
+.auth-form .form-group {
+    animation: scrollFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: both;
+    text-align: left;
+    max-width: 100%;
 }
 
-.auth-form::-webkit-scrollbar-track {
-    background: var(--background-color);
-    border-radius: 3px;
-}
-
-.auth-form::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 3px;
-}
-
-.auth-form::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
-}
+.auth-form .form-group:nth-child(1) { animation-delay: 0.1s; }
+.auth-form .form-group:nth-child(2) { animation-delay: 0.2s; }
+.auth-form .form-group:nth-child(3) { animation-delay: 0.3s; }
+.auth-form .form-group:nth-child(4) { animation-delay: 0.4s; }
 
 .auth-form h2 {
     font-size: 1.5rem;
@@ -1381,9 +1548,8 @@ ul li:last-child {
 
 /* Pricing Content Styles */
 .pricing-content {
-    text-align: left;
-    max-height: inherit;
-    overflow-y: auto;
+    text-align: center;
+    overflow: visible;
 }
 
 .pricing-highlight {
@@ -1471,6 +1637,7 @@ ul li:last-child {
     padding: var(--spacing-lg);
     border: 1px solid #e5e7eb;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
 }
 
 .features-list h4 {
@@ -1480,6 +1647,7 @@ ul li:last-child {
     margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--spacing-sm);
 }
 
@@ -1494,6 +1662,9 @@ ul li:last-child {
     margin: 0;
     display: grid;
     gap: var(--spacing-sm);
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .features-list li {
@@ -1503,19 +1674,21 @@ ul li:last-child {
     border-radius: 8px;
     background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
     border: 1px solid #f1f5f9;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    padding-left: 2.5rem;
+    animation: scrollFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: both;
+    transform: translateX(0);
 }
 
-.features-list li::before {
-    content: '✅';
-    position: absolute;
-    left: var(--spacing-md);
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem;
-}
+.features-list li:nth-child(1) { animation-delay: 0.1s; }
+.features-list li:nth-child(2) { animation-delay: 0.15s; }
+.features-list li:nth-child(3) { animation-delay: 0.2s; }
+.features-list li:nth-child(4) { animation-delay: 0.25s; }
+.features-list li:nth-child(5) { animation-delay: 0.3s; }
+.features-list li:nth-child(6) { animation-delay: 0.35s; }
+.features-list li:nth-child(7) { animation-delay: 0.4s; }
+.features-list li:nth-child(8) { animation-delay: 0.45s; }
 
 .features-list li:hover {
     background: linear-gradient(135deg, #f1f5f9 0%, #ffffff 100%);
@@ -1537,6 +1710,7 @@ ul li:last-child {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     position: relative;
     overflow: hidden;
+    text-align: center;
 }
 
 .contact-info::before {
@@ -1556,6 +1730,7 @@ ul li:last-child {
     margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--spacing-sm);
 }
 
@@ -1566,23 +1741,38 @@ ul li:last-child {
 
 .contact-info p {
     color: #374151;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
     line-height: 1.6;
     font-weight: 500;
+    font-size: 1rem;
 }
 
 .contact-details {
     background: #ffffff;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl);
     border-radius: 12px;
-    margin: var(--spacing-md) 0;
+    margin: var(--spacing-lg) 0;
     border: 1px solid #e5e7eb;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+    text-align: left;
+    max-width: 100%;
 }
 
 .contact-details p {
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.contact-details p strong {
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
 }
 
 .contact-details a {
@@ -1590,6 +1780,9 @@ ul li:last-child {
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s ease;
+    font-size: 0.9rem;
+    margin-top: var(--spacing-xs);
+    padding: var(--spacing-xs) 0;
 }
 
 .contact-details a:hover {
@@ -1599,18 +1792,33 @@ ul li:last-child {
 
 .payment-info {
     background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-xl);
     border-radius: 12px;
     border: 1px solid #d1fae5;
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-lg);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    text-align: center;
 }
 
 .payment-info p {
     color: #065f46;
     font-weight: 600;
-    margin-bottom: var(--spacing-sm);
-    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-info p strong {
+    color: #064e3b;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
 }
 
 .auth-note {
@@ -1843,22 +2051,22 @@ ul li:last-child {
 @media (max-width: 768px) {
     .auth-container {
         padding: var(--spacing-md);
-        align-items: flex-start;
-        padding-top: var(--spacing-xl);
+        align-items: center;
     }
     
     .auth-box {
         padding: var(--spacing-xl);
-        margin: 0;
+        margin: auto;
         width: 100%;
         max-width: 100%;
+        max-height: 85vh;
         border-radius: var(--radius-lg);
-        max-height: 90vh;
         overflow-y: auto;
+        overflow-x: hidden;
     }
     
     .auth-form {
-        max-height: calc(80vh - 250px);
+        overflow: visible;
     }
     
     .auth-header h1 {
@@ -1873,13 +2081,11 @@ ul li:last-child {
         flex-direction: row;
         gap: var(--spacing-xs);
         margin-bottom: var(--spacing-lg);
-        position: sticky;
-        top: 0;
-        background: var(--surface-color);
-        z-index: 2;
-        padding: var(--spacing-sm) var(--spacing-xl);
-        margin-left: calc(-1 * var(--spacing-xl));
-        margin-right: calc(-1 * var(--spacing-xl));
+        background: rgba(255, 255, 255, 0.98);
+        padding: var(--spacing-sm) var(--spacing-lg);
+        border-radius: var(--radius-lg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .auth-tab-btn {
@@ -2011,39 +2217,55 @@ ul li:last-child {
     }
     
     .contact-info {
-        padding: var(--spacing-md);
+        padding: var(--spacing-lg) var(--spacing-md);
+        margin: var(--spacing-md) 0;
+        border-radius: var(--border-radius);
+        background: rgba(255, 255, 255, 0.05);
     }
     
     .contact-info h4 {
-        font-size: 1rem;
-        margin-bottom: var(--spacing-sm);
+        font-size: 1.1rem;
+        margin-bottom: var(--spacing-md);
+        text-align: center;
+        color: var(--primary-color);
+        font-weight: 600;
     }
     
     .contact-info p {
-        font-size: 0.85rem;
-        line-height: 1.4;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        text-align: center;
+        margin-bottom: var(--spacing-sm);
     }
     
     .contact-details {
-        padding: var(--spacing-sm);
-        margin: var(--spacing-sm) 0;
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) 0;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: var(--border-radius);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .contact-details p {
-        font-size: 0.8rem;
-        line-height: 1.4;
-        margin-bottom: var(--spacing-xs);
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: var(--spacing-sm);
+        text-align: center;
     }
     
     .payment-info {
-        padding: var(--spacing-sm);
-        margin-top: var(--spacing-sm);
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) 0;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: var(--border-radius);
+        border-left: 3px solid var(--primary-color);
     }
     
     .payment-info p {
-        font-size: 0.8rem;
-        line-height: 1.3;
-        margin-bottom: var(--spacing-xs);
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: var(--spacing-sm);
+        text-align: center;
     }
     
     .auth-note {
